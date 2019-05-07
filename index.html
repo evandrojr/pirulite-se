@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pirulite-se</title>
+    <script type="text/javascript" src="date-pt-BR.js"></script>
+
+    <style>
+            .hidden {
+                display: none;
+            }
+
+            .visible {
+                display: block;
+            }
+
+            [rotulo]{
+                width: 5em;
+                display: inline-block;
+            }
+
+    </style>
+</head>
+<body>
+    <h1>Pirulite-se</h1>
+    <span rotulo>Entrada: </span><input  onchange="calc();" name="t1" id="t1"><BR><BR>
+    <span rotulo>Saída: </span><input  onchange="calc();" name="t2" id="t2"><BR><BR>
+    <span rotulo>Entrada: </span><input  onchange="calc();" name="t3" id="t3"><BR><BR>
+    <h3 id="8h" class="hidden">Saia até <span id="resultado8horas"></span> para não passar de 8 horas</h3>
+    <h3 id="5h" class="hidden">Saia até <span id="resultado5horas"></span> para não trabalhar de 5 horas ininterruptas</h3>
+</body>
+</html>
+
+<script>
+
+function toMinutes(v){
+    let t = v.split(':')
+    return  parseInt(t[0])* 60+ parseInt(t[1]);
+}
+
+
+function calc(){
+    let t1 = toMinutes(document.getElementById('t1').value);
+    let t2 = toMinutes(document.getElementById('t2').value);
+    let t3 = toMinutes(document.getElementById('t3').value);
+
+
+    document.getElementById("5h").className = "hidden";
+    document.getElementById("8h").className = "hidden";
+
+    // 8*60 =  t2-t1 + t4 - t3;
+    // -t4 = -480 + t2 - t1 -t3
+    let t8 = 480 - t2 + t1 + t3;
+
+    let por8horas = (new Date).clearTime()
+        .addMinutes(t8)
+        .toString('H:mm');
+
+    let t5 = t3 + (5*60);
+    let por5horas = (new Date).clearTime()
+        .addMinutes(t5)
+        .toString('H:mm');
+
+    if(t1 && t2 && t3){
+        if(t5<=t8){
+            document.getElementById('resultado5horas').textContent = por5horas;
+            document.getElementById("5h").className = "visible";
+        }else{   
+            document.getElementById('resultado8horas').textContent = por8horas;
+            document.getElementById("8h").className = "visible"; 
+        }
+    }
+}
+</script>
