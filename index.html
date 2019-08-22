@@ -17,7 +17,7 @@
             }
 
             [rotulo]{
-                width: 5em;
+                width: 8em;
                 display: inline-block;
             }
 
@@ -28,6 +28,15 @@
     <span rotulo>Entrada: </span><input onchange="calc();"  onkeydown="calc();" onpaste="calc();" oninput="calc();" id="t1"><BR><BR>
     <span rotulo>Saída: </span><input onchange="calc();"  onkeydown="calc();" onpaste="calc();" oninput="calc();" id="t2"><BR><BR>
     <span rotulo>Entrada: </span><input onchange="calc();"  onkeydown="calc();" onpaste="calc();" oninput="calc();" id="t3"><BR><BR>
+
+    <span rotulo>Cole as entradas:</span>    
+    <textarea id="area" onchange="calcArea();"  onkeydown="calcArea();" onpaste="calcArea();" oninput="calcArea();" id="" cols="30" rows="3">
+    </textarea> 
+
+
+    <!-- <textarea id="debug">
+    </textarea>  -->
+    <br><br><br><br><br><br><br><br><br><br><br><br><br>
     <h3 id="8h" class="hidden">Saia até <span id="resultado8horas"></span> para não passar de 8 horas</h3>
     <h3 id="5h" class="hidden">Saia até <span id="resultado5horas"></span> para não trabalhar de 5 horas ininterruptas</h3>
     <BR><BR>
@@ -42,6 +51,47 @@ function toMinutes(v){
     return  parseInt(t[0])* 60+ parseInt(t[1]);
 }
 
+function calcArea(){
+    let tudo = document.getElementById('area').value.trim();
+    
+
+    let horarios = tudo.split('\n');
+
+
+
+    let t1 = toMinutes(horarios[0].trim());
+    let t2 = toMinutes(horarios[1].trim());
+    let t3 = toMinutes(horarios[2].trim());
+
+    // document.getElementById('debug').textContent = `ti ${t1} t2 ${t2} t3 ${t3}`;
+
+
+    document.getElementById("5h").className = "hidden";
+    document.getElementById("8h").className = "hidden";
+
+    // 8*60 =  t2-t1 + t4 - t3;
+    // -t4 = -480 + t2 - t1 -t3
+    let t8 = 480 - t2 + t1 + t3;
+
+    let por8horas = (new Date).clearTime()
+        .addMinutes(t8)
+        .toString('H:mm');
+
+    let t5 = t3 + (5*60);
+    let por5horas = (new Date).clearTime()
+        .addMinutes(t5)
+        .toString('H:mm');
+
+    if(t1 && t2 && t3){
+        if(t5<=t8){
+            document.getElementById('resultado5horas').textContent = por5horas;
+            document.getElementById("5h").className = "visible";
+        }else{   
+            document.getElementById('resultado8horas').textContent = por8horas;
+            document.getElementById("8h").className = "visible"; 
+        }
+    }
+}
 
 function calc(){
     let t1 = toMinutes(document.getElementById('t1').value);
